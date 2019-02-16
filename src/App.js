@@ -1,41 +1,64 @@
 import React, { Component } from 'react';
 import './App.css';
+import 'bootstrap/dist/css/bootstrap.css';
+import Form from './Component/Form'
+import Title from './Component/Title';
+import SaveData from './Component/SaveData'
 
 class App extends Component {
   state = {
-    html: "HTML5",
-    javascript: "javaScript",
-    typescript: 'ES6 Basic',
-    node: 'NPM',
-    contentChangeText: 'You will see this content is going to change in 3 Sec'
+    userName: "",
+    lastName: "",
+    technologySkill: {
+      NODE: true,
+      REACT: true,
+      ANGULAR: false
+    },
+    experienceTotal: 0,
+    saveBtnClick: false
   }
 
-  
+  changeValue = (event) => {
+    const fieldName = event.target.name;
+    const fieldValue = event.target.value;
+    this.setState({
+      [fieldName]: fieldValue
+    })
+  }
+
+  tecknologySkillHandler = (event) => {
+    let checkbox = this.state.technologySkill;
+
+    checkbox[event.target.value] = event.target.checked;
+    this.setState({
+      technologySkill: checkbox
+    })
+    console.log(event.target.value)
+  }
+
+  expIncreaseHandler = (event) => {
+    event.preventDefault()
+    this.setState({
+      experienceTotal: this.state.experienceTotal + 1
+    })
+  }
+
+  saveUserDetails = (event) => {
+    event.preventDefault()
+    this.setState({
+      saveBtnClick: true
+    })
+    console.log(this.state)
+  }
 
   render() {
-    setTimeout(() => {
-      this.setState({
-        contentChangeText: 'Ahha Content change using this.setState({}) method'
-      })
-    }, 3000);
-
     return (
-      <div className="">
-        <h1>We get data from parent component in child in this.props as shown below</h1>
-        <h3>city name:- {this.props.city}</h3>
-        <code>this.props.city</code>
-        <hr></hr>
-        <h3>Country Name:- {this.props.country}</h3>
-        <hr></hr>
-        <h1>As describe state is nothing but javaScript object.</h1>
-        <h2>Following are the things you should learn before react:</h2>
-        <ul>
-          <li>{this.state.html}</li>
-          <li>{this.state.javascript}</li>
-          <li>{this.state.typescript}</li>
-          <li>{this.state.node}</li>
-          <li className="App-change">{this.state.contentChangeText}</li>
-        </ul>
+      <div className="App container">
+        <div className="row">
+          <Title />
+          <Form userData={this.state} formHandler={this.changeValue} saveUserData={this.saveUserDetails} checkboxHandler={this.tecknologySkillHandler} increaseCounter={this.expIncreaseHandler} />
+          {this.state.saveBtnClick ? <SaveData userData={this.state}/> : ""}
+        </div>
       </div>
     );
   }
